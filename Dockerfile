@@ -2,7 +2,7 @@
 FROM ubuntu:latest
 
 # Update the package lists, install the libclang-dev package, and clean up
-RUN apt-get update && apt-get install -y libclang-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libclang && rm -rf /var/lib/apt/lists/*
 
 
 # Continue with your other Dockerfile instructions...
