@@ -1,14 +1,8 @@
-# Use a Debian-based image as the base image
-FROM debian:latest
+# Use an Ubuntu-based image as the base image
+FROM ubuntu:latest
 
-# Update the package lists, install the required packages, and clean up
-RUN apt-get update && apt-get install -y \
-    make \
-    clang \
-    pkg-config \
-    libssl-dev \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
+# Update the package lists, install the libclang-dev package, and clean up
+RUN apt-get update && apt-get install -y libclang-dev && rm -rf /var/lib/apt/lists/*
 
 
 # Continue with your other Dockerfile instructions...
