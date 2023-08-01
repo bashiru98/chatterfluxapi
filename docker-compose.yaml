@@ -1,0 +1,51 @@
+version: '3'
+services:
+  api: 
+    build:
+      context: .
+    container_name: "chatterfluxapi"
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    # networks:
+    #   - app-network
+    labels:
+      - "traefik.enable=true"    
+      - "traefik.http.routers.myapplication.rule=Host(`chatterfluxapi.bashiru1.com`)"
+      - "traefik.http.routers.myapplication.entrypoints=websecure"
+      - "traefik.http.routers.myapplication.tls.certresolver=myresolver"
+      - "traefik.http.services.myapplication.loadbalancer.server.port=5001"
+  traefik:
+    image: "traefik:v2.2"
+    container_name: "traefik2"
+    command:
+      # this can be uncommented to get more information, in case something doesn't work
+      - "--log.level=DEBUG"
+      # set this to true to get access to the traefik web interface unter http://YOURIP:8080
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+        #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # uncomment this line to only test ssl generation first (to make sure you don't run into letsencrypt limits)
+      - "--certificatesresolvers.myresolver.acme.email=bukariatulebashiru@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      # - "8080:8080" # this is used for the web interface, that let's you check and monitor traefik and your configuration. It's very nice for debugging your config - only available if "api.insecure" above is set to true
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    # networks:
+    #   - app-network
+    # The following is only necessary if you want to enforce https!
+    # if you don't need that, you can just remove the labels here
+    labels:
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https"  
