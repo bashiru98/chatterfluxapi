@@ -1,5 +1,6 @@
 FROM rust:latest
 
+RUN yes | apt install make clang pkg-config libssl-dev
 WORKDIR /usr/src/chatterfluxapi
 
 COPY . .
