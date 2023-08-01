@@ -6,7 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rocksdb = "0.21.0"
 tokio = { version = "1.0.2", features = ["macros", "rt-multi-thread"] }
 warp = "0.3"
 http = "0.2"
@@ -21,3 +20,4 @@ jsonwebtoken = "=7.2"
 thiserror = "1.0"
 pwhash = "1"
 openai_api_rust = "0.1.8"
+rocksdb = "0.21.0"
