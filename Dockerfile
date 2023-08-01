@@ -7,14 +7,14 @@ RUN apt-get update && apt-get install -y libclang-dev && rm -rf /var/lib/apt/lis
 
 # Continue with your other Dockerfile instructions...
 
-# FROM rust:latest
-# WORKDIR /usr/src/chatterfluxapi
+FROM rust:latest
+WORKDIR /usr/src/chatterfluxapi
 
-# COPY . .
+COPY . .
 
-# RUN cargo build --release
+RUN cargo build --release
 
-# # RUN cargo install --path .
-# EXPOSE 5001
+# RUN cargo install --path .
+EXPOSE 5001
 
-# CMD ["chatterfluxapi"]
+CMD ["chatterfluxapi"]
