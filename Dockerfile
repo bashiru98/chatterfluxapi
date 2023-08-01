@@ -60,10 +60,10 @@ WORKDIR /usr/src/chatterfluxapi
 # Copy the Cargo.toml and Cargo.lock files to leverage Docker caching
 COPY Cargo.toml Cargo.lock ./
 
-# This is a dummy build to get the dependencies cached
-RUN mkdir -p ./src && \
-    echo 'fn main() { println!("Dummy build"); }' > ./src/main.rs && \
-    cargo build --release
+# # This is a dummy build to get the dependencies cached
+# RUN mkdir -p ./src && \
+#     echo 'fn main() { println!("Dummy build"); }' > ./src/main.rs && \
+#     cargo build --release
 
 # Now copy your actual source code
 COPY ./src ./src
