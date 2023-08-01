@@ -1,6 +1,13 @@
-FROM rust:latest
+# Use a Debian-based image as the base image
+FROM debian:latest
 
-RUN apt install make clang pkg-config libssl-dev
+# Update the package lists for upgrades and new package installations
+RUN apt-get update
+
+# Install the required packages
+RUN apt-get install -y make clang pkg-config libssl-dev
+
+FROM rust:latest
 WORKDIR /usr/src/chatterfluxapi
 
 COPY . .
