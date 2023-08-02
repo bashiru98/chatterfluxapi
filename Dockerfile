@@ -71,4 +71,6 @@ COPY ./src ./src
 # Build the application
 RUN cargo build --release
 
+EXPOSE 5001
+
 CMD ["./target/release/chatterfluxapi"]
