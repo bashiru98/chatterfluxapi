@@ -58,7 +58,7 @@ RUN apt-get update -y && \
 WORKDIR /usr/src/chatterfluxapi
 
 # Copy the Cargo.toml and Cargo.lock files to leverage Docker caching
-COPY Cargo.toml Cargo.lock ./
+COPY Cargo.toml Cargo.lock .env ./
 
 # # This is a dummy build to get the dependencies cached
 # RUN mkdir -p ./src && \
