@@ -282,6 +282,11 @@ async fn main() {
         .data(db.clone())
         .finish();
 
+    let cors = warp::cors()
+        .allow_any_origin()
+        .allow_headers(vec!["content-type"])
+        .allow_methods(vec!["GET", "POST", "OPTIONS"]);
+
     println!("Playground: http://localhost:5001");
 
     let graphql_post = async_graphql_warp::graphql(schema.clone()).and_then(
@@ -304,21 +309,22 @@ async fn main() {
             .body(playground_source(GraphQLPlaygroundConfig::new("/")))
     });
 
-    let routes = graphql_playground
-        .or(graphql_post)
-        .recover(|err: Rejection| async move {
-            if let Some(GraphQLBadRequest(err)) = err.find() {
-                return Ok::<_, Infallible>(warp::reply::with_status(
-                    err.to_string(),
-                    StatusCode::BAD_REQUEST,
-                ));
-            }
+    let routes =
+        graphql_playground
+            .or(graphql_post.with(cors))
+            .recover(|err: Rejection| async move {
+                if let Some(GraphQLBadRequest(err)) = err.find() {
+                    return Ok::<_, Infallible>(warp::reply::with_status(
+                        err.to_string(),
+                        StatusCode::BAD_REQUEST,
+                    ));
+                }
 
-            Ok(warp::reply::with_status(
-                "INTERNAL_SERVER_ERROR".to_string(),
-                StatusCode::INTERNAL_SERVER_ERROR,
-            ))
-        });
+                Ok(warp::reply::with_status(
+                    "INTERNAL_SERVER_ERROR".to_string(),
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                ))
+            });
 
     warp::serve(routes).run(([0, 0, 0, 0], 5001)).await;
 }
