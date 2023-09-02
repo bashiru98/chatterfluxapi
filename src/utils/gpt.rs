@@ -6,7 +6,7 @@ pub async fn generate_code_or_text(prompt: String) -> Result<String, Error> {
     let auth = Auth::from_env().unwrap();
     let openai = OpenAI::new(auth, "https://api.openai.com/v1/");
     let body = ChatBody {
-        model: "gpt-3.5-turbo".to_string(),
+        model: "gpt-3.5-turbo-0613".to_string(),
         max_tokens: Some(1024),
         temperature: Some(0_f32),
         top_p: Some(0_f32),
